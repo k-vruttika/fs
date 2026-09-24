@@ -1,0 +1,254 @@
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+let books = [
+  {id:1, title:'Gatsby', author:'Fitzgerald', price:25, quantity:10},
+  {id:2, title:'1984', author:'Orwell', price:15, quantity:5}
+];
+
+app.get('/books', (req,res) => res.json(books));
+
+app.post('/books', (req,res) => {
+  const book = {id:books.length+1, ...req.body};
+  books.push(book);
+  res.status(201).json(book);
+});
+
+app.put('/books/:id', (req,res) => {
+  const book = books.find(b => b.id == req.params.id);
+  if(book) Object.assign(book, req.body);
+  res.json(book);
+});
+
+app.delete('/books/:id', (req,res) => {
+  books = books.filter(b => b.id != req.params.id);
+  res.json({message:'Book deleted'});
+});
+
+app.listen(3004, () => console.log('Server running'));
+
+HTML VERSION:
+
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+let books = [
+  {id:1,title:"The Hobbit",author:"Tolkien",price:450},
+  {id:2,title:"Atomic Habits",author:"James Clear",price:600}
+];
+
+app.get("/", (req,res) => {
+  res.send(`
+    <h1>Online Book Cart</h1>
+    <input id="t" placeholder="Title">
+    <input id="a" placeholder="Author">
+    <input id="p" placeholder="Price">
+    <button onclick="save()">Add/Update</button>
+    <div id="list"></div>
+
+    <script>
+      let edit = 0;
+
+      async function load(){
+        let r = await fetch('/books'), b = await r.json();
+        list.innerHTML = b.map(x =>
+          x.id+". "+x.title+" - "+x.author+" - ₹"+x.price+
+          " <button onclick='editBook("+x.id+")'>Edit</button>"+
+          " <button onclick='del("+x.id+")'>Delete</button>"
+        ).join("<br>");
+      }
+
+      async function save(){
+        let data={title:t.value,author:a.value,price:p.value};
+        await fetch(edit?'/books/'+edit:'/books',{
+          method:edit?'PUT':'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(data)
+        });
+        edit=0; load();
+      }
+
+      async function editBook(id){
+        let r=await fetch('/books/'+id), b=await r.json();
+        t.value=b.title; a.value=b.author; p.value=b.price; edit=id;
+      }
+
+      async function del(id){
+        await fetch('/books/'+id,{method:'DELETE'}); load();
+      }
+
+      load();
+    </script>
+  `);
+});
+
+app.get("/books",(req,res)=>res.json(books));
+
+app.get("/books/:id",(req,res)=>
+  res.json(books.find(b=>b.id==req.params.id)));
+
+app.post("/books",(req,res)=>{
+  let b={id:books.length+1,...req.body};
+  books.push(b); res.json(b);
+});
+
+app.put("/books/:id",(req,res)=>{
+  let b=books.find(b=>b.id==req.params.id);
+  Object.assign(b,req.body); res.json(b);
+});
+
+app.delete("/books/:id",(req,res)=>{
+  books=books.filter(b=>b.id!=req.params.id);
+  res.json({message:"Deleted"});
+});
+
+app.listen(3004,()=>console.log("Server running"));
+
+CSS VERSION:
+
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+let books = [
+  {id:1, title:"The Hobbit", author:"Tolkien", price:450},
+  {id:2, title:"Atomic Habits", author:"James Clear", price:600}
+];
+
+app.get("/", (req,res) => {
+  res.send(`
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial;
+          background: #f2f2f2;
+          padding: 30px;
+        }
+        .box {
+          background: white;
+          padding: 25px;
+          max-width: 700px;
+          margin: auto;
+          border-radius: 10px;
+        }
+        input {
+          padding: 10px;
+          margin: 5px;
+        }
+        button {
+          padding: 10px;
+          margin: 5px;
+          background: #333;
+          color: white;
+          border: 0;
+          border-radius: 5px;
+        }
+        .book {
+          background: #eee;
+          padding: 10px;
+          margin: 8px 0;
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="box">
+        <h1>Online Book Cart</h1>
+
+        <input id="t" placeholder="Title">
+        <input id="a" placeholder="Author">
+        <input id="p" placeholder="Price">
+        <button onclick="save()">Add / Update</button>
+
+        <h2>Books</h2>
+        <div id="list"></div>
+      </div>
+
+      <script>
+        let edit = 0;
+
+        async function load() {
+          let r = await fetch('/books');
+          let b = await r.json();
+
+          list.innerHTML = b.map(x =>
+            '<div class="book">' +
+            x.id + '. ' + x.title + ' - ' + x.author + ' - ₹' + x.price +
+            ' <button onclick="editBook('+x.id+')">Edit</button>' +
+            ' <button onclick="del('+x.id+')">Delete</button>' +
+            '</div>'
+          ).join('');
+        }
+
+        async function save() {
+          let data = {
+            title:t.value,
+            author:a.value,
+            price:p.value
+          };
+
+          await fetch(edit ? '/books/'+edit : '/books', {
+            method: edit ? 'PUT' : 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(data)
+          });
+
+          edit = 0;
+          load();
+        }
+
+        async function editBook(id) {
+          let r = await fetch('/books/'+id);
+          let b = await r.json();
+
+          t.value = b.title;
+          a.value = b.author;
+          p.value = b.price;
+          edit = id;
+        }
+
+        async function del(id) {
+          await fetch('/books/'+id, {method:'DELETE'});
+          load();
+        }
+
+        load();
+      </script>
+    </body>
+    </html>
+  `);
+});
+
+// READ
+app.get("/books",(req,res)=>res.json(books));
+
+app.get("/books/:id",(req,res)=>
+  res.json(books.find(b=>b.id==req.params.id))
+);
+
+// CREATE
+app.post("/books",(req,res)=>{
+  let b = {id:books.length+1, ...req.body};
+  books.push(b);
+  res.json(b);
+});
+
+// UPDATE
+app.put("/books/:id",(req,res)=>{
+  let b = books.find(b=>b.id==req.params.id);
+  Object.assign(b,req.body);
+  res.json(b);
+});
+
+// DELETE
+app.delete("/books/:id",(req,res)=>{
+  books = books.filter(b=>b.id!=req.params.id);
+  res.json({message:"Deleted"});
+});
+
+app.listen(3004,()=>console.log("Server running"));
