@@ -1,62 +1,54 @@
+index.html:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Information</title>
+    <style>
+        body { font-family: Arial; }
+        form { width: 250px; padding: 10px; border: 1px solid #ccc;
+               margin: 10px auto; }
+        input { width: 95%; margin-bottom: 8px; }
+        h2 { text-align: center; }
+    </style>
+</head>
+<body>
+    <h2>Student Information Form</h2>
+
+    <form action="/get" method="get">
+        <b>Using GET Method</b><br><br>
+        Name: <input name="name"><br>
+        Branch: <input name="branch"><br>
+        Semester: <input name="semester"><br>
+        <button>Submit (GET)</button>
+    </form>
+
+    <form action="/post" method="post">
+        <b>Using POST Method</b><br><br>
+        Name: <input name="name"><br>
+        Branch: <input name="branch"><br>
+        Semester: <input name="semester"><br>
+        <button>Submit (POST)</button>
+    </form>
+</body>
+</html>
+
+
+
+server.js:
 const express = require('express');
 const app = express();
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.static(__dirname));
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req,res) => {
-    res.send(`
-    <html>
-    <head>
-        <title>Student Information</title>
-        <style>
-            body { font-family: Arial; }
-            form { width: 250px; padding: 10px; border: 1px solid #ccc;
-                   margin: 10px auto; }
-            input { width: 95%; margin-bottom: 8px; }
-            h2 { text-align: center; }
-        </style>
-    </head>
-    <body>
-        <h2>Student Information Form</h2>
+const page = (d, m) => `
+    <h2>Student Information (${m})</h2>
+    Name: <b>${d.name}</b><br>
+    Branch: <u>${d.branch}</u><br>
+    Semester: ${d.semester}<br><br>
+    <a href="/">Go Back</a>`;
 
-        <form action="/get" method="get">
-            <b>Using GET Method</b><br><br>
-            Name: <input name="name"><br>
-            Branch: <input name="branch"><br>
-            Semester: <input name="semester"><br>
-            <button>Submit (GET)</button>
-        </form>
-
-        <form action="/post" method="post">
-            <b>Using POST Method</b><br><br>
-            Name: <input name="name"><br>
-            Branch: <input name="branch"><br>
-            Semester: <input name="semester"><br>
-            <button>Submit (POST)</button>
-        </form>
-    </body>
-    </html>
-    `);
-});
-
-app.get('/get', (req,res) => {
-    res.send(`
-        <h2>Student Information (GET)</h2>
-        Name: <b>${req.query.name}</b><br>
-        Branch: <u>${req.query.branch}</u><br>
-        Semester: ${req.query.semester}<br><br>
-        <a href="/">Go Back</a>
-    `);
-});
-
-app.post('/post', (req,res) => {
-    res.send(`
-        <h2>Student Information (POST)</h2>
-        Name: <b>${req.body.name}</b><br>
-        Branch: <u>${req.body.branch}</u><br>
-        Semester: ${req.body.semester}<br><br>
-        <a href="/">Go Back</a>
-    `);
-});
+app.get('/get', (req, res) => res.send(page(req.query, 'GET')));
+app.post('/post', (req, res) => res.send(page(req.body, 'POST')));
 
 app.listen(3001, () => console.log('Server running on port 3001'));
