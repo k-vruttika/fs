@@ -1,0 +1,164 @@
+src>ResumeCreate
+
+
+>Resume_Header.js: 
+import React from "react";
+
+class Resume_Header extends React.Component {
+  render() {
+    return <header><h1>Resume Details</h1></header>;
+  }
+}
+
+export default Resume_Header;
+
+
+
+
+
+>Resume_Person_Info.js:
+import React from "react";
+
+class Resume_Person_Info extends React.Component {
+  render() {
+    return (
+      <section className="info">
+        <div>Name : <p>Vruttika</p></div>
+        <div>Address : <p>Bangalore</p></div>
+        <div>Phone No : <p>1234567890</p></div>
+        <div>email id : <p>vk123@gmail.com</p></div>
+      </section>
+    );
+  }
+}
+
+export default Resume_Person_Info;
+
+
+
+
+
+
+>Education.js:
+import React from "react";
+
+class EdRow extends React.Component {
+  render() {
+    const { id, name, place, stddeg, grade } = this.props;
+    return <tr><td>{id}</td><td>{name}</td><td>{place}</td><td>{stddeg}</td><td>{grade}</td></tr>;
+  }
+}
+
+class EdTable extends React.Component {
+  render() {
+    const education = [
+      { id: 1, name: "National Public School", place: "Bengaluru", stddeg: "10th", grade: "A+" },
+      { id: 2, name: "Indian Institute of Science", place: "Bengaluru", stddeg: "under grade", grade: "9.8" }
+    ];
+
+    return (
+      <table>
+        <thead><tr><th>id</th><th>name</th><th>place</th><th>education</th><th>grade</th></tr></thead>
+        <tbody>{education.map(e => <EdRow key={e.id} {...e} />)}</tbody>
+      </table>
+    );
+  }
+}
+
+class Education extends React.Component {
+  render() {
+    return <EdTable />;
+  }
+}
+
+export default Education;
+
+
+
+
+
+
+
+>index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import ResumeHeader from "./ResumeCreate/Resume_Header";
+import ResumePersonInfo from "./ResumeCreate/Resume_Person_Info";
+import Education from "./ResumeCreate/Education";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <div className="resume">
+      <ResumeHeader />
+      <ResumePersonInfo />
+      <Education />
+      <footer>Vruttika | vk123@gmail.com | Bangalore</footer>
+    </div>
+  </React.StrictMode>
+);
+
+
+
+
+
+
+>index.css
+body {
+  font-family: Arial;
+  background: aliceblue;
+}
+
+.resume {
+  width: 800px;
+  margin: auto;
+  background: white;
+}
+
+header, th, footer {
+  background: steelblue;
+  color: white;
+}
+
+header, footer {
+  text-align: center;
+  padding: 10px;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 30px;
+}
+
+.info div {
+  background: aliceblue;
+  padding: 10px;
+}
+
+p {
+  margin: 0;
+  font-weight: bold;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto 30px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid lightgray;
+  padding: 10px;
+}
+
+
+
+
+
+
+
+
+
+
