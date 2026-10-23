@@ -1,0 +1,209 @@
+Student.js:
+
+
+import React from "react";
+
+const students = [
+  { slno: 1, name: "stud1", usn: "rvce1", tmarks: 150 },
+  { slno: 2, name: "stud2", usn: "rvce2", tmarks: 145 }
+];
+
+class StudentRow extends React.Component {
+  render() {
+    const student = this.props.student;
+    return (
+      <tr>
+        <td>{student.slno}</td>
+        <td>{student.name}</td>
+        <td>{student.usn}</td>
+        <td>{student.tmarks}</td>
+      </tr>
+    );
+  }
+}
+
+class StudentTable extends React.Component {
+  render() {
+    const rows = this.props.students.map(student =>
+      <StudentRow key={student.slno} student={student} />
+    );
+
+    return (
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Sl No</th>
+            <th>Student Name</th>
+            <th>USN</th>
+            <th>Total Marks</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    );
+  }
+}
+
+class StudentForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const form = document.forms.studAdd;
+
+    const student = {
+      name: form.name.value,
+      usn: form.usn.value,
+      tmarks: form.tmarks.value
+    };
+
+    this.props.addStudent(student);
+
+    form.name.value = "";
+    form.usn.value = "";
+    form.tmarks.value = "";
+  }
+
+  render() {
+    return (
+      <form name="studAdd" onSubmit={this.handleSubmit}>
+        <input name="name" placeholder="Name" />
+        <input name="usn" placeholder="USN" />
+        <input type="number" name="tmarks" placeholder="Total Marks" />
+        <button type="submit">Add</button>
+      </form>
+    );
+  }
+}
+
+class StudentList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { students: [] };
+    this.addStudent = this.addStudent.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
+    setTimeout(() => {
+      this.setState({ students: students });
+    }, 5000);
+  }
+
+  addStudent(student) {
+    student.slno = this.state.students.length + 1;
+    const list = this.state.students.slice();
+    list.push(student);
+    this.setState({ students: list });
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <hr />
+        <StudentTable students={this.state.students} />
+        <hr />
+        <StudentForm addStudent={this.addStudent} />
+      </React.Fragment>
+    );
+  }
+}
+
+export default StudentList;
+
+
+
+
+
+
+
+App.js:
+import React from "react";
+import StudentList from "./Student";
+
+function App() {
+  return <StudentList />;
+}
+
+export default App;
+
+
+
+index.js:
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+
+
+index.css:
+
+body {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+}
+
+table {
+  border-collapse: collapse;
+  background: white;
+  margin: 15px 0;
+  min-width: 450px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: steelblue;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #eee;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 18px 0;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+input {
+  padding: 9px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+button {
+  padding: 9px 20px;
+  background: #7045a5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #553080;
+}
