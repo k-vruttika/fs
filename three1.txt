@@ -1,0 +1,146 @@
+1. src/ResumeCreate/Resume_Header.js
+
+jsx
+import React from "react";
+
+class Resume_Header extends React.Component {
+  render() {
+    return <header><h1>Resume Details</h1></header>;
+  }
+}
+
+export default Resume_Header;
+
+2. src/ResumeCreate/Resume_Person_Info.js
+
+jsx
+import React from "react";
+
+class Resume_Person_Info extends React.Component {
+  render() {
+    return (
+      <section className="info">
+        <div>Name : <p>{this.props.name}</p></div>
+        <div>Address : <p>{this.props.address}</p></div>
+        <div>Phone No : <p>{this.props.phone}</p></div>
+        <div>email id : <p>{this.props.email}</p></div>
+      </section>
+    );
+  }
+}
+
+export default Resume_Person_Info;
+
+3. src/ResumeCreate/Education.js
+
+jsx
+import React from "react";
+
+class EdRow extends React.Component {
+  render() {
+    return (
+      <tr>
+        <td>{this.props.id}</td>
+        <td>{this.props.name}</td>
+        <td>{this.props.place}</td>
+        <td>{this.props.stddeg}</td>
+        <td>{this.props.grade}</td>
+      </tr>
+    );
+  }
+}
+
+class EdTable extends React.Component {
+  render() {
+    return (
+      <table>
+        <tbody>
+          <tr><th>id</th><th>name</th><th>place</th><th>education</th><th>grade</th></tr>
+          <EdRow id="1" name="National Public School" place="Bengaluru" stddeg="10th" grade="A+" />
+          <EdRow id="2" name="Indian Institute of Science" place="Bengaluru" stddeg="under grade" grade="9.8" />
+        </tbody>
+      </table>
+    );
+  }
+}
+
+class Education extends React.Component {
+  render() {
+    return <EdTable />;
+  }
+}
+
+export default Education;
+
+4. src/index.js
+
+jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import Resume_Header from "./ResumeCreate/Resume_Header";
+import Resume_Person_Info from "./ResumeCreate/Resume_Person_Info";
+import Education from "./ResumeCreate/Education";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <div className="resume">
+      <Resume_Header />
+      <Resume_Person_Info name="Vruttika" address="Bangalore" phone="1234567890" email="vk123@gmail.com" />
+      <Education />
+      <footer>Vruttika | vk123@gmail.com | Bangalore</footer>
+    </div>
+  </React.StrictMode>
+);
+
+5. src/index.css
+
+css
+body {
+  font-family: Arial;
+  background: aliceblue;
+}
+
+.resume {
+  width: 800px;
+  margin: auto;
+  background: white;
+}
+
+header, th, footer {
+  background: steelblue;
+  color: white;
+}
+
+header, footer {
+  text-align: center;
+  padding: 10px;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 30px;
+}
+
+.info div {
+  background: aliceblue;
+  padding: 10px;
+}
+
+p {
+  margin: 0;
+  font-weight: bold;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto 30px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid lightgray;
+  padding: 10px;
+}
